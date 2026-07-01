@@ -1,14 +1,21 @@
 cmake_minimum_required(VERSION 3.10)
 
 if (WIN32)
-    set(Boost_USE_STATIC_LIBS OFF)
-    # The auto-linking feature has problems with USE_STATIC_LIBS off, so we use
-    # BOOST_ALL_NO_LIB to turn it off.
-    # Several boost libraries headers aren't configured correctly if
-    # USE_STATIC_LIBS is off, so we explicitly say they are dynamic with the
-    # remaining definitions.
-    add_definitions(-DBOOST_ALL_NO_LIB -DBOOST_PROGRAM_OPTIONS_DYN_LINK -DBOOST_IOSTREAMS_DYN_LINK -DBOOST_THREAD_DYN_LINK)
-endif( )
+    set(Boost_USE_STATIC_LIBS ON)
+
+    add_definitions(
+        -DBOOST_ALL_NO_LIB
+        -DBOOST_ALL_STATIC_LINK
+        -DBOOST_PROGRAM_OPTIONS_STATIC_LINK
+        -DBOOST_THREAD_USE_LIB
+    )
+
+    remove_definitions(
+        -DBOOST_PROGRAM_OPTIONS_DYN_LINK
+        -DBOOST_IOSTREAMS_DYN_LINK
+        -DBOOST_THREAD_DYN_LINK
+    )
+endif()
 
 # Define a single cmake project
 project(kenlm)
